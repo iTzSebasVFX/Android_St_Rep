@@ -1,8 +1,10 @@
 package com.example.project_1.view.Activity1
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.project_1.BotonesPeques
 import com.example.project_1.R
 
 
@@ -36,14 +39,22 @@ fun Imagen1() {
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(y = (-260).dp)
+                .offset(y = (-300).dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                "\u00aebibi",
-                fontSize = 70.sp,
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "\u00ae"
+                )
+                Text(
+                    "bibi",
+                    fontSize = 70.sp,
+                    textAlign = TextAlign.Left
+                )
+            }
         }
         Column(
             modifier = Modifier
@@ -69,6 +80,13 @@ fun Imagen1() {
                     color = Color.Gray
                 )
             }
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = (380).dp)
+        ) {
+            BotonesPeques(0);
         }
     }
 }
