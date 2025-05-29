@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
@@ -31,12 +32,94 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.project_1.BotonesPeques
 import com.example.project_1.R
+import com.example.project_1.Titulo
 import com.example.project_1.ui.theme.Project_1Theme
+import com.example.project_1.view.RelicarioMaldito.orientacion
 import com.example.project_1.view.VacioInfinito.Navegate
 
 
 @Composable
 fun Imagen3(navController: NavHostController) {
+    if (orientacion() == true) {
+        LazyColumn {
+            item {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row {
+                            Titulo()
+                        }
+                        Image(
+                            painter = painterResource(R.drawable.ic_launcher_postal),
+                            contentDescription = null,
+                            modifier = Modifier.size(200.dp)
+                        )
+                        Spacer(modifier = Modifier.height(40.dp))
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                "Get Started",
+                                fontSize = 50.sp,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(35.dp))
+                            Button(
+                                onClick = { },
+                                colors = ButtonColors(
+                                    containerColor = Color.Blue,
+                                    contentColor = Color.White,
+                                    disabledContentColor = Color.White,
+                                    disabledContainerColor = Color.Blue
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth(0.5f)
+                                    .padding(horizontal = 15.dp)
+                            ) {
+                                Text(
+                                    "Enviar",
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(30.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Already have an account?",
+                                color = Color(0xFF2F2E2E),
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Right
+                            )
+                            TextButton(
+                                onClick = { navController.navigate("login") },
+                                modifier = Modifier.fillMaxWidth(0.15f)
+                            ) {
+                                Text(
+                                    text = "Login",
+                                    color = Color(0xFFFF5722),
+                                    fontSize = 20.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(40.dp))
+                        BotonesPeques(0);
+                    }
+                }
+            }
+        }
+    }
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
