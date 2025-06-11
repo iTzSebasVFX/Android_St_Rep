@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sena.entregable_3.data.local.AppDatabase
-import com.sena.entregable_3.repository.ClienteRepository
-import com.sena.entregable_3.repository.NotaRepository
+import com.sena.entregable_3.data.repository.ClienteRepository
+import com.sena.entregable_3.data.repository.NotaRepository
 import com.sena.entregable_3.ui.cliente.formCliente
 import com.sena.entregable_3.ui.cliente.listarCliente
 import com.sena.entregable_3.ui.nota.formNotas
@@ -33,14 +33,25 @@ fun appNavigation() {
         composable("clientesList") {
             listarCliente(navController, clienteViewModel)
         }
+        // Formularios cliente
         composable("clientesForm") {
-            formCliente(navController, clienteViewModel)
+            formCliente(navController, clienteViewModel, id = 0)
         }
+        composable("clientesForm/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: -1
+            formCliente(navController, clienteViewModel, id)
+        }
+        // Lista notas
         composable("notasList") {
             listarNotas(navController, notaViewModel, clienteViewModel)
         }
+        // Formulario de notas
         composable("notasForm") {
-            formNotas(navController, notaViewModel, clienteViewModel)
+            formNotas(navController, notaViewModel, clienteViewModel, notaId = 0)
+        }
+        composable("notasForm/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: -1
+            formNotas(navController, notaViewModel, clienteViewModel, id)
         }
     }
 }

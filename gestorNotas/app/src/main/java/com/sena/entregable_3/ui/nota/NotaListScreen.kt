@@ -57,6 +57,7 @@ fun listarNotas(
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
+                        Text("Id: ${nota.id}")
                         Text("Cliente: $clienteNombre")
                         Text("Contenido: ${nota.contenido}")
                         Text("Fecha: ${nota.fecha}")
@@ -68,14 +69,12 @@ fun listarNotas(
                             }) {
                                 Text("❌")
                             }
-                            /**
                             Spacer(modifier = Modifier.width(4.dp))
                             Button(onClick = {
-                                navController.navigate("notasForm?id=${nota.id}")
+                                navController.navigate("notasForm/${nota.id}")
                             }) {
                                 Text("🖋️")
                             }
-                            */
                         }
                     }
                 }

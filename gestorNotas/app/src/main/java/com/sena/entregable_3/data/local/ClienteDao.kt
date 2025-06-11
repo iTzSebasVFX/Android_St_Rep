@@ -19,7 +19,7 @@ interface ClienteDao {
     suspend fun deleteById(id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(todo: Cliente)
+    suspend fun insert(cliente: Cliente)
 
     @Query("SELECT * FROM Cliente ORDER BY id DESC")
     fun getAll(): Flow<List<Cliente>>

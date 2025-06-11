@@ -39,86 +39,156 @@ fun formNotas(
     navController: NavController,
     notaViewModel: NotaViewModel = viewModel(),
     clienteViewModel: ClienteViewModel = viewModel(),
-    notaId: Int? = null
+    notaId: Int
 ) {
     val clientes by clienteViewModel.allCliente.collectAsState()
     var selectedClienteNombre by remember { mutableStateOf("") }
     var selectedClienteId by remember { mutableStateOf<Int?>(null) }
     var expanded by remember { mutableStateOf(false) }
-
     var contenido by rememberSaveable { mutableStateOf("") }
-/*
-    LaunchedEffect(notaId) {
-        if (notaId != null) {
-            val nota = notaViewModel.getNotaById(notaId)
-            nota?.let {
-                contenido = it.contenido
-                selectedClienteId = it.idCliente
-                selectedClienteNombre = clientes.find { cliente -> cliente.id == it.idCliente }?.nombre ?: ""
-            }
+
+    if (notaId > 0) {
+        // Formulario Actulizacion
+        LaunchedEffect(notaId) {
+            notaViewModel.notaById(notaId)
         }
-    }
-
- */
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Registro de notas", modifier = Modifier.padding(vertical = 30.dp), fontSize = 30.sp)
-
-        // Menu para seleccionar cliente
-        Box {
-            OutlinedTextField(
-                value = selectedClienteNombre,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Selecciona un cliente") },
-                trailingIcon = {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+        val nota = notaViewModel.nota.value
+        if (nota != null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Actualizar notas",
+                    modifier = Modifier.padding(vertical = 30.dp),
+                    fontSize = 30.sp
+                )
+                val nombreCliente = clientes.find { it.id == nota.idCliente }?.nombre ?: "Desconocido"
+                // Menu para seleccionar cliente
+                Box {
+                    Column {
+                        Text(text = "Cliente anterior: $nombreCliente")
+                        OutlinedTextField(
+                            value = selectedClienteNombre,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Selecciona un cliente") },
+                            trailingIcon = {
+                                IconButton(onClick = { expanded = true }) {
+                                    Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                                }
+                            }
+                        )
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            clientes.forEach { cliente ->
+                                DropdownMenuItem(
+                                    text = { Text(cliente.nombre) },
+                                    onClick = {
+                                        selectedClienteNombre = cliente.nombre
+                                        selectedClienteId = cliente.id
+                                        expanded = false
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
-            )
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                clientes.forEach { cliente ->
-                    DropdownMenuItem(
-                        text = { Text(cliente.nombre) },
-                        onClick = {
-                            selectedClienteNombre = cliente.nombre
-                            selectedClienteId = cliente.id
-                            expanded = false
+
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    label = { Text("Contenido") },
+                    placeholder = { Text(text = nota.contenido) },
+                    value = contenido,
+                    onValueChange = { contenido = it }
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = {
+                        if (selectedClienteId != null && contenido.isNotBlank()) {
+                            notaViewModel.updateNota(notaId, contenido, selectedClienteId!!)
+                            navController.popBackStack()
                         }
-                    )
+                    }
+                ) {
+                    Text("Actualizar")
                 }
             }
+        } else {
+            Text(text = "cargando datos...")
         }
+    } else {
+        // Formulario Inserción
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "Registro de notas",
+                modifier = Modifier.padding(vertical = 30.dp),
+                fontSize = 30.sp
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            label = { Text("Contenido") },
-            value = contenido,
-            onValueChange = { contenido = it }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Button(
-            onClick = {
-                if (selectedClienteId != null && contenido.isNotBlank()) {
-                    notaViewModel.addNota(selectedClienteId!!, contenido)
-                    navController.popBackStack()
+            // Menu para seleccionar cliente
+            Box {
+                OutlinedTextField(
+                    value = selectedClienteNombre,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Selecciona un cliente") },
+                    trailingIcon = {
+                        IconButton(onClick = { expanded = true }) {
+                            Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                        }
+                    }
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    clientes.forEach { cliente ->
+                        DropdownMenuItem(
+                            text = { Text(cliente.nombre) },
+                            onClick = {
+                                selectedClienteNombre = cliente.nombre
+                                selectedClienteId = cliente.id
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
-        ) {
-            Text("Guardar")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                label = { Text("Contenido") },
+                value = contenido,
+                onValueChange = { contenido = it }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                onClick = {
+                    if (selectedClienteId != null && contenido.isNotBlank()) {
+                        notaViewModel.addNota(selectedClienteId!!, contenido)
+                        navController.popBackStack()
+                    }
+                }
+            ) {
+                Text("Guardar")
+            }
         }
     }
 }
